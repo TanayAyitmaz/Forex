@@ -1,0 +1,44 @@
+Tanay Ayıtmaz Martingale Robotu
+
+// Parametreler
+Çalışma Periyodu 	: 1H (MT5 geçerli çalışma periyodu)
+Maksimum İşlem		: 5
+Başlangıç Lot		: 0.01 
+Lot Çarpanı		: 2
+İşlem Aralığı		: 100 (pips)
+Zarar Kes		: 600 (pips)
+Kar Al			: 900 (pips)
+
+//- Extra Parametreler
+Trende Göre İşlem	: Evet / Hayır
+Takip Eden Zarar Kes	: Evet / Hayır
+
+//- İşlem Algortiması
+1- RSI 9 Close değerine göre Alım / Satım işlemine girer.
+
+2- Zaman Periyodu MT5 ekranında ki geçerli periyod olacaktır. (Sabitlenebilir)
+
+3- RSI 70 'e eşit veya büyükse ilk satım işlemi yapılır (işlemler kontrol edilir Alım varsa Satım işlemine girilmez) [İlk İşlem]
+
+4- RSI 30 'a eşit veya küçükse ilk alım işlemi yapılır (işlemler kontrol edilir Satım varsa Alım işlemine girilmez) [İlk İşlem]
+
+5- Satım işlemi için : ilk alımdan itibaren her 100 pips'te bir (İşlem Aralığı parametresine göre) Maksimum İşlem parametresi kadar Yeni Satım işlemi gerçekleştirilir. 
+Örn: EURUSD Satım;
+	1. İşlem = 1.20800 (0.01) SL : 1.20200 TP : 1.21700
+	2. İşlem = 1.20900 (0.02) SL : 1.20300 TP : 1.21800
+	3. İşlem = 1.21000 (0.04) SL : 1.20400 TP : 1.21900
+	4. İşlem = 1.21100 (0.08) SL : 1.20500 TP : 1.22000
+	5. İşlem = 1.21200 (0.16) SL : 1.20600 TP : 1.22100 olacaktır. (Lot Çarpanı, İşlem Aralığı, Zarar Kes, Kar Al parametresine göre değiştirilebilir.)
+
+6- Satım İşlemi için Kar Al - Zarar Kes eşitleme : Martingle mantığına göre işlemler çarpanlar şeklinde arttırıldığı için Kar Al Algoritmasında İlk işlemin 
+Kar Al noktasına gelmesi beklenmemelidir. (İsteyen bekleyebilir.) Bu nedenle Eşitlenmiş bir Kar Al Noktası belirlenmelidir. Tabi ki bu durumda ilk işlemlerin bazıları
+Zararla kapanacak ama son işlemler daha büyük hacimli olduğu için Kar sağlanacaktır. Zarar Kes ise en düşük noktaya çekilebilir, Fakat bu durumda MFE ve MAE oranlarında
+düşüşler yaşanabilir. Ayrıca açık kalan emir zamanında yükşelik yaşanır.
+
+7- Alım İşlemi için : Satışın tam tersi olacaktır. (tek tek açıklamadım.)
+
+8- Extra Algoritmalar ekleme : Trende Göre İşlem bir Trend takibi Algoritması içermelidir, Trend'leri neye göre takip ediyorsunuz sorusunu sormalıyız?
+Ben Trendleri 21,34 Yumuşatılmış (Gürültü oluşmaması için) SMMA (Smoothed) ve 144 Üssel EMA (Exponential) Hareketli ortalamalara göre takip ederim. 
+Bu algoritmayla Trende karşı açılan işlemler önlenmiş olacaktır. Örn. Yukarı Güçlü bir trendte RSI her zaman 70'in üzerinde sinyal verdikçe işlem açılacak ve
+zarar artacaktır bunun yerine sistem RSI 70 üzerinde tetiklenmeyip RSI 30 ve altında dip aramaya çalışacaktır. 
+
